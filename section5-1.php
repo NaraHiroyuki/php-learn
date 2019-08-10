@@ -156,11 +156,11 @@ rsort($data, SORT_STRING);
 print_r($data);
 
 $data2 = ['Tennis' => 1, 'Swimming' => 1, 'Soccer' => 11, 'Baseball' => 9];
-sort($data, SORT_NUMERIC);
+sort($data);
 print_r($data2);
 
 $data3 = ['Tennis' => 1, 'Swimming' => 1, 'Soccer' => 11, 'Baseball' => 9];
-asort($data3, SORT_NUMERIC);
+asort($data3, SORT_STRING);
 print_r($data3);
 
 ksort($data3, SORT_STRING);
@@ -179,6 +179,65 @@ $str = '彼の電話番号は0399-88-9785、私のは0398-99-1234です。郵便
 if (preg_match('/([0-9]{2,4})-([0-9]{2,4})-([0-9]{4})/', $str, $data,PREG_OFFSET_CAPTURE)) {
     print_r($data);
 }
+
+// p187
+$str = '彼の電話番号は0399-88-9785、私のは0398-99-1234です。郵便番号はどちらも687-1109です。';
+if(preg_match_all('/([0-9]{2,4})-([0-9]{2,4})-([0-9]{4})/',$str, $data,PREG_SET_ORDER)){
+    foreach ($data as $item) {
+        echo "電話番号:{$item[0]}","\n";
+        echo "市外局番:{$item[1]}","\n";
+        echo "市内局番:{$item[2]}","\n";
+        echo "加入者番号:{$item[3]}","\n";
+    }
+}
+
+//p189　URL文字列の正規表現パターン
+$msg = <<<EOD
+サンプルは、「サーバサイド技術の学び舎(http://www.wings.msn.to/)」から入手
+できます。執筆のノウハウ集「WINGS Knowledge」(http://www31.atwiki.jp/wingsproject)もどうぞ。
+EOD;
+print preg_replace('|http(s)?://([\w-]+\.)+[\w-]+(/[\w-./?%&=]*)?|','<a href="$0">$0</a>',$msg);
+
+//p191
+$today = '2016-05-14';
+$result = preg_split('|[/.\-]|',$today);
+print "{$result[0]}年{$result[1]}月{$result[2]}日";
+
+//p192
+$today = '2016-05-14';
+$result = preg_split('|([/.\-])|', $today, -1, PREG_SPLIT_DELIM_CAPTURE);
+print_r($result);
+
+//p193　大文字/小文字を区別しない-i修飾子
+$msg = <<<EOD
+サンプルは、「サーバサイド技術の学び舎(http://www.wings.msn.to/)」から入手
+できます。執筆のノウハウ集「WINGS Knowledge」(HTTP://www31.atwiki.jp/wingsproject)もどうぞ。
+EOD;
+print preg_replace('|http(s)?://([\w-]+\.)+[\w-]+(/[\w-./?%&=]*)?|i', '<a href="$0">$0</a>', $msg);
+
+//p194 複数行検索に対応する-m修飾子
+$str = "7人の小人と白雪姫\n101匹ワンちゃん";
+// $strの内容を先頭から検索&マッチしたものを書き出し
+if (preg_match_all('/^[0-9]{1,}/m', $str, $data)) {
+    foreach ($data[0] as $item) {
+        print "マッチング結果:{$item}";
+        echo "\n";
+    }
+}
+
+// p195 置き換え後の結果をスクリプトとして実行する-e修飾子
+$msg = <<<EOD
+サンプルは、「サーバサイド技術の学び舎(http://www.wings.msn.to/)」から入手
+できます。執筆のノウハウ集「WINGS Knowledge」(HTTP://www31.atwiki.jp/wingsproject)もどうぞ。
+EOD;
+print preg_replace_callback(
+    '|http(s)?://([¥w-]+¥.)+[¥w-]+(/[¥w- ./?%&=]*)?|i',
+    function($matches) {
+        foreach($matches as $match) {
+            return mb_strtoupper($match);
+        }
+    },$msg
+)
 
 
 ?>
