@@ -162,9 +162,116 @@ function factorial(int $num): int {
     return 1;
 }
 
-echo factorial(5);
+echo factorial(5),"\n";
 
+// p241 可変関数
+$name = 'getTriangleArea';
+$area = $name(8, 10);
+echo $area,"\n";
 
+// p242
+function my_array_walk(array $array, callable $func) {
+    foreach ($array as $key => $value) {
+        $func($value, $key);
+    }
+}
+
+function showItem($value, $key) {
+    echo "{$key}:{$value},\n";
+}
+
+$data = ['杉田', '長田', '杉沼', '和田','土井'];
+my_array_walk($data, 'showItem');
+
+function my_array_walk2(array $array, callable $func)
+{
+    foreach ($array as $key => $value) {
+        $func($value, $key);
+    }
+}
+
+$result = 0;
+function sum4(float $value, int $key) {
+    global $result;
+    $result += $value;
+}
+$data = [100, 50, 10, 5];
+my_array_walk2($data, 'sum4');
+echo "合計値:{$result},\n";
+
+// p245 無名関数
+function my_array_walk3(array $array, callable $func){
+    foreach ($array as $key => $value) {
+        $func($value, $key);
+    }
+}
+
+$data = ['杉田', '長田', '杉沼', '和田', '土井'];
+
+my_array_walk3($data,
+    function ($value, $key) {
+        echo "{$key}:{$value},\n";
+    }
+);
+
+// p246
+function my_array_walk4(array $array, callable $func){
+    foreach ($array as $key => $value) {
+        $func($value, $key);
+    }
+}
+// 結果を求めるための関数
+$data = [100, 50, 10, 5];
+// 結果値を格納するための変数
+$result = 0;
+my_array_walk4($data,
+    function (float $value, int $key) use(&$result) {
+        $result += $value;
+    }
+);
+
+echo "合計値:{$result},\n";
+
+// p248 ジェネレータ
+function myGen() {
+    yield 'あいうえお';
+    yield 'かきくけこ';
+    yield 'さしすせそ';
+}
+
+foreach(myGen() as $value) {
+    echo $value,"\n";
+}
+
+//素数を求めるジェネレータ
+function getPrimes() {
+    $num = 2;
+    while(true) {
+        if (isPrime($num)) {
+            yield $num;
+        }
+        $num++;
+    }
+}
+
+function isPrime(int $value): bool {
+    $prime = true;  // 素数かどうかを表すフラグ
+    // 2~sprt($value)で、$valueを割り切れる(あまりが0)のものがあるか
+    for ($i = 2; $i < floor(sqrt($value)); $i++) {
+        if ($value % $i === 0) {
+            $prime = false;
+            break;
+        }
+    }
+    return $prime;
+}
+
+foreach(getPrimes() as $prime) {
+    if($prime > 100) {
+        die();
+    }
+    echo $prime,"\n";
+}
 
 
 
