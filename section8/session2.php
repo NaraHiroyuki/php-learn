@@ -1,4 +1,7 @@
-<?php setcookie('email', $_POST['email'], time() - 3600 ); ?>
+<?php 
+session_start();
+$_SESSION['email'] = $_POST['email'];
+?>
 <!DOCTYPE html>
 <html>
 
@@ -8,7 +11,7 @@
 </head>
 
 <body>
-クッキーを保存しました。
+セッション情報を保存しました。
 </body>
 
 </html>
